@@ -17,11 +17,11 @@ def makeTruthTable(x,f,n):
     o = ""
     # begin tabular environment
     o = o + "\\begin{tabular}{c | " + "c " * l + "| c}\n"
-    o = o + "$" + str(n).replace("'","") + "$ & "
+    o = o + "$" + str(n).strip("'") + "$ & "
     # write column names
     for m in n:
         o = o + "$" + str(m) + "$ & "
-    o = o + "$p" + str(n).replace("'","") + "$" + " \\\\ \n \\hline \n"
+    o = o + "$p" + str(n).strip("'") + "$" + " \\\\ \n \\hline \n"
     for y in x:
         o = o + "$" + str(y) + "$ & "
         for z in y:
