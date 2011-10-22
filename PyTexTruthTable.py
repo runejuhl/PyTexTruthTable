@@ -1,40 +1,18 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from itertools import product
 
-def truth(x,f):
-    """ Return the values in set x where f(x) is true.
-    """
-    s = []
-    for n in x:
-        if f(n):
-            s.append(n)
-    return s
+def truthTable(f):
+    """ Gives you a tex-formatted truth table for the boolean function f. """
+    names = f.__code__.co_varnames
+    num = len(names)
+    combs = product(range(2), repeat=num)
+    vals = ("\t" + " & ".join(str(x) for x in c) + " & " + ("1" if f(*c) else "0") + r"\\" for c in combs)
 
-def makeTruthTable(x,f,n):
-    """ Create a truth table in LaTeX from inputs x (with names n) and function f.
-    """
-    l = len(x[0])
-    o = ""
-    # begin tabular environment
-    o = o + "\\begin{tabular}{c | " + "c " * l + "| c}\n"
-    o = o + "$" + str(n).strip("'") + "$ & "
-    # write column names
-    for m in n:
-        o = o + "$" + str(m) + "$ & "
-    o = o + "$p" + str(n).strip("'") + "$" + " \\\\ \n \\hline \n"
-    for y in x:
-        o = o + "$" + str(y) + "$ & "
-        for z in y:
-            o = o + "$" + str(z) + "$ & "
-        o = o + "$" + ("1" if f(y) else "0") + "$ \\\\ \n"
-    o = o + "\\end{tabular}\n"
-    return o
-"""
-Usage:
+    return r"\begin{tabular}{" + "c "*num + "| c}\n" + \
+            "\t" + " & ".join(r'\(' + n + r'\)' for n in names) + r" & \\" + "\n" + \
+            "\t" + r"\hline" + "\n" + \
+            "\n".join(vals) + "\n" + \
+           r"\end{tabular}"
 
-define set:
-s = ((0,0,0),(0,0,1),(0,1,0),(0,1,1),(1,0,0),(1,0,1),(1,1,0),(1,1,1))
-
-print truth table:
-print(makeTruthTable(s, lambda (x,y,z): (x and not (y and z)) or not z, ("x","y","z")))
-"""
+print (truthTable(lambda x,y,z: x and not (y and z) or not z))
